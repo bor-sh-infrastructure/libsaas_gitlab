@@ -18,18 +18,19 @@ class ProjectsBase(resource.GitlabResource):
 class Projects(ProjectsBase):
 
     @base.apimethod
-    def get(self, owned_or_all=None, data=None):
+    def get(self, data=None):
         """
         Fetch projects the user has access to.
 
         :var owned_or_all: Is owner of the project
         """
-        params = data
         url    = self.get_url()
-        if owned_or_all:
-            url = [ url, url + "/owned"][ "owned" == owned_or_all]
-            url = [ url, url + "/all"][ "all" == owned_or_all]
+        if data and 'owned_or_all' in data:
+            url = [ url, url + "/owned"][ "owned" == data['owned_or_all']]
+            url = [ url, url + "/all"][ "all" == data['owned_or_all']]
+            del data['owned_or_all']
 
+        params = data
         return http.Request('GET', url, params), parsers.parse_json
 
     @base.apimethod

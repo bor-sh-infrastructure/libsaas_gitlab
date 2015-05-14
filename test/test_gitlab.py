@@ -39,14 +39,14 @@ class GitlabTestCase(unittest.TestCase):
         self.service.projects().get()
         self.expect('GET', '/projects')
 
-        self.service.projects().get("allsdf")
-        self.expect('GET', '/projects')
+        self.service.projects().get({ 'page':1, 'per_page':100 })
+        self.expect('GET', '/projects', { 'page':1, 'per_page':100 })
 
-        self.service.projects().get("all")
-        self.expect('GET', '/projects/all')
+        self.service.projects().get({ 'owned_or_all':'all' })
+        self.expect('GET', '/projects/all', {})
 
-        self.service.projects().get("owned")
-        self.expect('GET', '/projects/owned')
+        self.service.projects().get({ 'owned_or_all':'owned' })
+        self.expect('GET', '/projects/owned', {})
 
         self.service.projects().search("name")
         self.expect('GET', '/projects/search/name')
