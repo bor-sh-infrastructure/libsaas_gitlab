@@ -52,3 +52,7 @@ for project in projects:
       print "Print comments"
       print json.dumps(comments, indent=4, sort_keys=True)
 ~~~
+
+## Client applications
+
+* git-gitlab: git command line interface to gitlab https://gitlab.com/bor-sh/git-gitlab
