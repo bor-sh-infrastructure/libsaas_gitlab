@@ -185,3 +185,10 @@ class Project(ProjectsBase):
         Get keys
         """
         return keys.Keys(self)
+
+    @base.resource(resource.LabelsBase)
+    def labels(self):
+        """
+        Get labels
+        """
+        return resource.LabelsBase(self)

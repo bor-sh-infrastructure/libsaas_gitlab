@@ -449,3 +449,18 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.group(1).member(4).get())
         with port.assertRaises(MethodNotSupported):
             self.assertRaises(self.service.group(1).member(3).create(data))
+
+    def test_labels(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).labels().get()
+        self.expect('GET', '/projects/1/labels')
+
+        self.service.project(2).labels().create(data)
+        self.expect('POST', '/projects/2/labels', data)
+
+        self.service.project(3).labels().update(data)
+        self.expect('PUT', '/projects/3/labels', data)
+
+        self.service.project(4).labels().delete()
+        self.expect('DELETE', '/projects/4/labels')

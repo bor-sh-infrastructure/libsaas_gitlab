@@ -54,3 +54,23 @@ class Member(MembersBase):
     def create(self, obj):
         raise base.MethodNotSupported()
 
+class LabelsBase(base.RESTResource):
+    path = 'labels'
+
+    @base.apimethod
+    def update(self, obj):
+        """
+        Update object
+        """
+        url = '{0}'.format(self.get_url())
+
+        return http.Request('PUT', url, obj), parsers.parse_json
+
+    @base.apimethod
+    def delete(self):
+        """
+        Delete
+        """
+        url = '{0}'.format(self.get_url())
+
+        return http.Request('DELETE', url), parsers.parse_json
