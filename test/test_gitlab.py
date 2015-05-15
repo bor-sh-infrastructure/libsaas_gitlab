@@ -272,3 +272,35 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.project(1).branch(2).update(data))
         with port.assertRaises(MethodNotSupported):
             self.assertRaises(self.service.project(1).branch(2).create(data))
+
+    def test_commits(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).commits().get()
+        self.expect('GET', '/projects/1/repository/commits')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commits().create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commits().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commits().delete())
+
+        self.service.project(1).commit("sha").get()
+        self.expect('GET', '/projects/1/repository/commits/sha')
+
+        self.service.project(1).commit("sha2").get_diff()
+        self.expect('GET', '/projects/1/repository/commits/sha2/diff')
+
+        self.service.project(1).commit("shaadfaf").get_comments()
+        self.expect('GET', '/projects/1/repository/commits/shaadfaf/comments')
+
+        self.service.project(1).commit("shaf3434fasdf").post_comment(data)
+        self.expect('POST', '/projects/1/repository/commits/shaf3434fasdf/comments', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commit("sha").create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commit("sha").update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).commit("sha").delete())

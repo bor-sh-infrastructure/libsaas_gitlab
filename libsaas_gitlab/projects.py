@@ -5,6 +5,7 @@ from . import resource
 from . import merge_requests
 from . import issues
 from . import branches
+from . import commits
 
 class MembersBase(resource.GitlabResource):
     path = 'members'
@@ -158,3 +159,17 @@ class Project(ProjectsBase):
         Get branches
         """
         return branches.BranchesBase(self)
+
+    @base.resource(commits.Commit)
+    def commit(self, sha):
+        """
+        Get a commit
+        """
+        return commits.Commit(self, sha)
+
+    @base.resource(commits.CommitsBase)
+    def commits(self):
+        """
+        Get commmits
+        """
+        return commits.CommitsBase(self)
