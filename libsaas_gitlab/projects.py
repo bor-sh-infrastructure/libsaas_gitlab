@@ -220,3 +220,10 @@ class Project(ProjectsBase):
         Get snippets
         """
         return resource.Snippets(self)
+
+    @base.resource(resource.RepositoryBase)
+    def repository(self):
+        """
+        Get repository
+        """
+        return resource.RepositoryBase(self)

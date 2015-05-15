@@ -551,3 +551,31 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(3).snippet(3).raw()
         self.expect('GET', '/projects/3/snippets/3/raw')
+
+    def test_repository(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).repository().tags()
+        self.expect('GET', '/projects/1/repository/tags')
+
+        self.service.project(1).repository().tag(data)
+        self.expect('POST', '/projects/1/repository/tags', data)
+
+        self.service.project(1).repository().tree()
+        self.expect('GET', '/projects/1/repository/tree')
+
+        self.service.project(2).repository().raw_file("shkslf", data)
+        self.expect('GET', '/projects/2/repository/blobs/shkslf', data)
+
+        self.service.project(2).repository().raw_blob("shkslf")
+        self.expect('GET', '/projects/2/repository/raw_blobs/shkslf')
+
+        self.service.project(2).repository().get_archive()
+        self.expect('GET', '/projects/2/repository/archive')
+
+        self.service.project(2).repository().compare(data)
+        self.expect('GET', '/projects/2/repository/compare', data)
+
+        self.service.project(2).repository().contributors()
+        self.expect('GET', '/projects/2/repository/contributors')
+        

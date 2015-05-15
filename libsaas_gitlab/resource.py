@@ -145,3 +145,79 @@ class Snippet(SnippetsBase):
         Return a resource corresponding to all notes.
         """
         return Notes(self)
+
+class RepositoryBase(base.RESTResource):
+    path = 'repository'
+
+    @base.apimethod
+    def tags(self):
+        """
+        Tags
+        """
+        url = '{0}/tags'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
+
+    @base.apimethod
+    def tag(self, data):
+        """
+        Tag
+        """
+        url = '{0}/tags'.format(self.get_url())
+
+        return http.Request('POST', url, data), parsers.parse_json
+
+    @base.apimethod
+    def tree(self):
+        """
+        Tree
+        """
+        url = '{0}/tree'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
+
+    @base.apimethod
+    def raw_file(self, sha, data):
+        """
+        Raw file content
+        """
+        url = '{0}/blobs/{1}'.format(self.get_url(), sha)
+
+        return http.Request('GET', url, data), parsers.parse_json
+
+    @base.apimethod
+    def raw_blob(self, sha):
+        """
+        Raw file content
+        """
+        url = '{0}/raw_blobs/{1}'.format(self.get_url(), sha)
+
+        return http.Request('GET', url), parsers.parse_json
+
+    @base.apimethod
+    def get_archive(self):
+        """
+        Get archive
+        """
+        url = '{0}/archive'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
+
+    @base.apimethod
+    def compare(self, data):
+        """
+        Compare
+        """
+        url = '{0}/compare'.format(self.get_url())
+
+        return http.Request('GET', url, data), parsers.parse_json
+
+    @base.apimethod
+    def contributors(self):
+        """
+        Contributors
+        """
+        url = '{0}/contributors'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
+
