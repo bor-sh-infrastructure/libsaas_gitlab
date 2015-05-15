@@ -30,9 +30,17 @@ class GitlabResource(base.RESTResource):
 
         return request, parsers.parse_json
 
+class NotesBase(base.RESTResource):
+    path = 'notes'
+
+class Notes(NotesBase):
+    pass
+
+class Note(NotesBase):
+    pass
+
 class MembersBase(GitlabResource):
     path = 'members'
-
 
 class Members(MembersBase):
 
@@ -98,3 +106,42 @@ class Milestone(MilestonesBase):
         url = '{0}/issues'.format(self.get_url())
 
         return http.Request('GET', url), parsers.parse_json
+
+class SnippetsBase(base.RESTResource):
+    path = 'snippets'
+
+
+class Snippets(SnippetsBase):
+
+    @base.apimethod
+    def delete(self):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+class Snippet(SnippetsBase):
+
+    @base.apimethod
+    def raw(self):
+        """
+        Raw content
+        """
+        url = '{0}/raw'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
+
+    @base.resource(Note)
+    def note(self, note_id):
+        """
+        Return a resource corresponding to a single note.
+        """
+        return Note(self, note_id)
+
+    @base.resource(Notes)
+    def notes(self):
+        """
+        Return a resource corresponding to all notes.
+        """
+        return Notes(self)

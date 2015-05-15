@@ -495,3 +495,59 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(3).milestone(5).issues()
         self.expect('GET', '/projects/3/milestones/5/issues')
+
+    def test_notes(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).issue(4).notes().get()
+        self.expect('GET', '/projects/1/issues/4/notes')
+
+        self.service.project(1).issue(4).notes().create(data)
+        self.expect('POST', '/projects/1/issues/4/notes', data)
+
+        self.service.project(1).issue(4).note(3).update(data)
+        self.expect('PUT', '/projects/1/issues/4/notes/3', data)
+
+        self.service.project(1).issue(4).note(2).get()
+        self.expect('GET', '/projects/1/issues/4/notes/2')
+
+        self.service.project(1).snippet(4).notes().get()
+        self.expect('GET', '/projects/1/snippets/4/notes')
+
+        self.service.project(1).snippet(4).notes().create(data)
+        self.expect('POST', '/projects/1/snippets/4/notes', data)
+
+        self.service.project(1).snippet(4).note(2).get()
+        self.expect('GET', '/projects/1/snippets/4/notes/2')
+
+        self.service.project(1).snippet(4).note(3).update(data)
+        self.expect('PUT', '/projects/1/snippets/4/notes/3', data)
+
+    def test_snippets(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).snippets().get()
+        self.expect('GET', '/projects/1/snippets')
+
+        self.service.project(2).snippets().create(data)
+        self.expect('POST', '/projects/2/snippets', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippets().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippets().delete())
+
+        self.service.project(1).snippet(3).get()
+        self.expect('GET', '/projects/1/snippets/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippet(4).create(data))
+
+        self.service.project(3).snippet(3).update(data)
+        self.expect('PUT', '/projects/3/snippets/3', data)
+
+        self.service.project(3).snippet(3).delete()
+        self.expect('DELETE', '/projects/3/snippets/3')
+
+        self.service.project(3).snippet(3).raw()
+        self.expect('GET', '/projects/3/snippets/3/raw')

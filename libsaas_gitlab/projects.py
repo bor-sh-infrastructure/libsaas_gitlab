@@ -206,3 +206,17 @@ class Project(ProjectsBase):
         Get milestones
         """
         return resource.Milestones(self)
+
+    @base.resource(resource.Snippet)
+    def snippet(self, snippet_id):
+        """
+        Get snippet
+        """
+        return resource.Snippet(self, snippet_id)
+
+    @base.resource(resource.Snippets)
+    def snippets(self):
+        """
+        Get snippets
+        """
+        return resource.Snippets(self)
