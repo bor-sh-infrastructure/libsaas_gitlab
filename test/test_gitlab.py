@@ -395,3 +395,57 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.project(1).key(2).create(data))
         with port.assertRaises(MethodNotSupported):
             self.assertRaises(self.service.project(1).key(3).update(data))
+
+    def test_groups(self):
+        data = { 'test' : 'test'}
+
+        self.service.groups().get()
+        self.expect('GET', '/groups')
+
+        self.service.groups().search("test")
+        self.expect('GET', '/groups', { "search":"test"} )
+
+        self.service.groups().create(data)
+        self.expect('POST', '/groups', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.groups().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.groups().delete())
+
+        self.service.group(1).get()
+        self.expect('GET', '/groups/1')
+
+        self.service.group(1).delete()
+        self.expect('DELETE', '/groups/1')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).update(data))
+
+        # admin only
+        self.service.group(1).transfer_project(3)
+        self.expect('POST', '/groups/1/projects/3')
+
+        self.service.group(1).members().get()
+        self.expect('GET', '/groups/1/members')
+
+        self.service.group(1).members().create(data)
+        self.expect('POST', '/groups/1/members', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).members().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).members().delete())
+
+        self.service.group(1).member(3).update(data)
+        self.expect('PUT', '/groups/1/members/3', data)
+
+        self.service.group(1).member(3).delete()
+        self.expect('DELETE', '/groups/1/members/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).member(4).get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).member(3).create(data))

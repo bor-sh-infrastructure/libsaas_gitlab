@@ -29,3 +29,28 @@ class GitlabResource(base.RESTResource):
         request = http.Request('GET', self.get_url(), data)
 
         return request, parsers.parse_json
+
+class MembersBase(GitlabResource):
+    path = 'members'
+
+
+class Members(MembersBase):
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def delete(self):
+        raise base.MethodNotSupported()
+
+class Member(MembersBase):
+
+    @base.apimethod
+    def get(self):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def create(self, obj):
+        raise base.MethodNotSupported()
+

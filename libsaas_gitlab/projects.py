@@ -8,9 +8,6 @@ from . import branches
 from . import commits
 from . import keys
 
-class MembersBase(resource.GitlabResource):
-    path = 'members'
-
 class HooksBase(resource.GitlabResource):
     path = 'hooks'
 
@@ -119,19 +116,19 @@ class Project(ProjectsBase):
         """
         return issues.ProjectIssues(self)
 
-    @base.resource(MembersBase)
+    @base.resource(resource.MembersBase)
     def members(self):
         """
         Get members
         """
-        return MembersBase(self)
+        return resource.MembersBase(self)
 
-    @base.resource(MembersBase)
+    @base.resource(resource.MembersBase)
     def member(self, user_id):
         """
         Get team member by id
         """
-        return MembersBase(self, user_id)
+        return resource.MembersBase(self, user_id)
 
     @base.resource(HooksBase)
     def hooks(self):
@@ -140,7 +137,7 @@ class Project(ProjectsBase):
         """
         return HooksBase(self)
 
-    @base.resource(MembersBase)
+    @base.resource(HooksBase)
     def hook(self, hook_id):
         """
         Get a hook

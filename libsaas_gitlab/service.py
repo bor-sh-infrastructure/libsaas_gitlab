@@ -7,6 +7,7 @@ from libsaas.services import base
 from . import projects
 from . import users
 from . import issues
+from . import groups
 
 class Gitlab(base.Resource):
     """
@@ -88,5 +89,19 @@ class Gitlab(base.Resource):
         Return the resource corresponding to all the projects.
         """
         return issues.Issues(self)
+
+    @base.resource(groups.Group)
+    def group(self, group_id):
+        """
+        Return the resource corresponding to all the groups.
+        """
+        return groups.Group(self, group_id)
+
+    @base.resource(groups.Groups)
+    def groups(self):
+        """
+        Return the resource corresponding to all the groups.
+        """
+        return groups.Groups(self)
 
 Gitlab = Gitlab
