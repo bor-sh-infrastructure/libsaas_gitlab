@@ -464,3 +464,34 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(4).labels().delete()
         self.expect('DELETE', '/projects/4/labels')
+
+    def test_milestones(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).milestones().get()
+        self.expect('GET', '/projects/1/milestones')
+
+        self.service.project(1).milestones().get(data)
+        self.expect('GET', '/projects/1/milestones', data)
+
+        self.service.project(2).milestones().create(data)
+        self.expect('POST', '/projects/2/milestones', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestones().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestones().delete())
+
+        self.service.project(1).milestone(4).get()
+        self.expect('GET', '/projects/1/milestones/4')
+
+        self.service.project(3).milestone(5).update(data)
+        self.expect('PUT', '/projects/3/milestones/5', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestone(5).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestone(5).delete())
+
+        self.service.project(3).milestone(5).issues()
+        self.expect('GET', '/projects/3/milestones/5/issues')

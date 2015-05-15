@@ -192,3 +192,17 @@ class Project(ProjectsBase):
         Get labels
         """
         return resource.LabelsBase(self)
+
+    @base.resource(resource.Milestone)
+    def milestone(self, milestone_id):
+        """
+        Get milestone
+        """
+        return resource.Milestone(self, milestone_id)
+
+    @base.resource(resource.Milestones)
+    def milestones(self):
+        """
+        Get milestones
+        """
+        return resource.Milestones(self)

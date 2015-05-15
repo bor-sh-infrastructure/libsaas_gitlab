@@ -74,3 +74,27 @@ class LabelsBase(base.RESTResource):
         url = '{0}'.format(self.get_url())
 
         return http.Request('DELETE', url), parsers.parse_json
+
+class MilestonesBase(GitlabResource):
+    path = 'milestones'
+
+    @base.apimethod
+    def delete(self):
+        raise base.MethodNotSupported()
+
+class Milestones(MilestonesBase):
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+class Milestone(MilestonesBase):
+
+    @base.apimethod
+    def issues(self):
+        """
+        Issues resource
+        """
+        url = '{0}/issues'.format(self.get_url())
+
+        return http.Request('GET', url), parsers.parse_json
