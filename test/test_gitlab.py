@@ -193,20 +193,86 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.project(1).merge_request(2).comments().delete())
 
     def test_users(self):
-        self.service.user().get()
-        self.expect('GET', '/user', {}, {'PRIVATE-TOKEN': 'my-token'})
+        data = { 'test':'test'}
 
-        self.service.users().get("username")
-        self.expect('GET', '/users')
+        self.service.users().get(data)
+        self.expect('GET', '/users', data, {'PRIVATE-TOKEN': 'my-token'})
+
+        self.service.users().create(data)
+        self.expect('POST', '/users', data, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.users().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.users().delete())
 
         self.service.user(1).get()
         self.expect('GET', '/users/1', {}, {'PRIVATE-TOKEN': 'my-token'})
 
-        self.service.user().keys().get()
-        self.expect('GET', '/user/keys')
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user(1).create(data))
+
+        self.service.user(1).update(data)
+        self.expect('PUT', '/users/1', data, {'PRIVATE-TOKEN': 'my-token'})
+
+        self.service.user(1).delete()
+        self.expect('DELETE', '/users/1', {}, {'PRIVATE-TOKEN': 'my-token'})
 
         self.service.user(1).keys().get()
-        self.expect('GET', '/users/1/keys')
+        self.expect('GET', '/users/1/keys', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        self.service.user(1).keys().create(data)
+        self.expect('POST', '/users/1/keys', data, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user(1).keys().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user(1).keys().delete())
+
+        ## not documented in api but who knows does not harm anybody
+        self.service.user(1).key(5).get()
+        self.expect('GET', '/users/1/keys/5', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user(1).key(5).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user(1).key(5).update(data))
+
+        self.service.user(1).key(5).delete()
+        self.expect('DELETE', '/users/1/keys/5', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        # current user
+        self.service.user().get()
+        self.expect('GET', '/user', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().delete())
+
+        self.service.user().keys().get()
+        self.expect('GET', '/user/keys', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        self.service.user().keys().create(data)
+        self.expect('POST', '/user/keys', data, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().keys().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().keys().delete())
+
+        self.service.user().key(2).get()
+        self.expect('GET', '/user/keys/2', {}, {'PRIVATE-TOKEN': 'my-token'})
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().key(4).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.user().key(4).update(data))
+
+        self.service.user().key(4).delete()
+        self.expect('DELETE', '/user/keys/4', {}, {'PRIVATE-TOKEN': 'my-token'})
 
     def test_issues(self):
         self.service.issues().get()
@@ -304,3 +370,28 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.project(1).commit("sha").update(data))
         with port.assertRaises(MethodNotSupported):
             self.assertRaises(self.service.project(1).commit("sha").delete())
+
+    def test_keys(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).keys().get()
+        self.expect('GET', '/projects/1/keys')
+
+        self.service.project(1).keys().create(data)
+        self.expect('POST', '/projects/1/keys', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).keys().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).keys().delete())
+
+        self.service.project(1).key(3).get()
+        self.expect('GET', '/projects/1/keys/3')
+
+        self.service.project(1).key(3).delete()
+        self.expect('DELETE', '/projects/1/keys/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).key(2).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(1).key(3).update(data))

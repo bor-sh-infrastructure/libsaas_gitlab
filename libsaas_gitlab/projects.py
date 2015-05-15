@@ -6,6 +6,7 @@ from . import merge_requests
 from . import issues
 from . import branches
 from . import commits
+from . import keys
 
 class MembersBase(resource.GitlabResource):
     path = 'members'
@@ -173,3 +174,17 @@ class Project(ProjectsBase):
         Get commmits
         """
         return commits.CommitsBase(self)
+
+    @base.resource(keys.Key)
+    def key(self, key_id):
+        """
+        Get a key
+        """
+        return keys.Key(self, key_id)
+
+    @base.resource(keys.Keys)
+    def keys(self):
+        """
+        Get keys
+        """
+        return keys.Keys(self)
