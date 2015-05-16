@@ -578,4 +578,19 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(2).repository().contributors()
         self.expect('GET', '/projects/2/repository/contributors')
+
+    def test_repository_files(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).repository().file().get(data)
+        self.expect('GET', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().create(data)
+        self.expect('POST', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().update(data)
+        self.expect('PUT', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().delete(data)
+        self.expect('DELETE', '/projects/1/repository/files', data)
         

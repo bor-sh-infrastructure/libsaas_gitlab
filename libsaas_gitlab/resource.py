@@ -146,6 +146,33 @@ class Snippet(SnippetsBase):
         """
         return Notes(self)
 
+class FilesBase(GitlabResource):
+    path = 'files'
+
+    @base.apimethod
+    def create(self, data):
+        """
+        Update
+        """
+        url = '{0}'.format(self.get_url())
+        return http.Request('POST', url, data), parsers.parse_json
+
+    @base.apimethod
+    def update(self, data):
+        """
+        Update
+        """
+        url = '{0}'.format(self.get_url())
+        return http.Request('PUT', url, data), parsers.parse_json
+
+    @base.apimethod
+    def delete(self, data):
+        """
+        Delete
+        """
+        url = '{0}'.format(self.get_url())
+        return http.Request('DELETE', url, data), parsers.parse_json
+
 class RepositoryBase(base.RESTResource):
     path = 'repository'
 
@@ -221,3 +248,9 @@ class RepositoryBase(base.RESTResource):
 
         return http.Request('GET', url), parsers.parse_json
 
+    @base.resource(FilesBase)
+    def file(self):
+        """
+        Get files resource
+        """
+        return FilesBase(self)
