@@ -8,12 +8,6 @@ from . import branches
 from . import commits
 from . import keys
 
-class MembersBase(resource.GitlabResource):
-    path = 'members'
-
-class HooksBase(resource.GitlabResource):
-    path = 'hooks'
-
 class ProjectsBase(resource.GitlabResource):
     path = 'projects'
 
@@ -119,33 +113,33 @@ class Project(ProjectsBase):
         """
         return issues.ProjectIssues(self)
 
-    @base.resource(MembersBase)
+    @base.resource(resource.MembersBase)
     def members(self):
         """
         Get members
         """
-        return MembersBase(self)
+        return resource.MembersBase(self)
 
-    @base.resource(MembersBase)
+    @base.resource(resource.MembersBase)
     def member(self, user_id):
         """
         Get team member by id
         """
-        return MembersBase(self, user_id)
+        return resource.MembersBase(self, user_id)
 
-    @base.resource(HooksBase)
+    @base.resource(resource.HooksBase)
     def hooks(self):
         """
         Get hooks
         """
-        return HooksBase(self)
+        return resource.HooksBase(self)
 
-    @base.resource(MembersBase)
+    @base.resource(resource.HooksBase)
     def hook(self, hook_id):
         """
         Get a hook
         """
-        return HooksBase(self, hook_id)
+        return resource.HooksBase(self, hook_id)
 
     @base.resource(branches.Branch)
     def branch(self, branch):
@@ -188,3 +182,52 @@ class Project(ProjectsBase):
         Get keys
         """
         return keys.Keys(self)
+
+    @base.resource(resource.LabelsBase)
+    def labels(self):
+        """
+        Get labels
+        """
+        return resource.LabelsBase(self)
+
+    @base.resource(resource.Milestone)
+    def milestone(self, milestone_id):
+        """
+        Get milestone
+        """
+        return resource.Milestone(self, milestone_id)
+
+    @base.resource(resource.Milestones)
+    def milestones(self):
+        """
+        Get milestones
+        """
+        return resource.Milestones(self)
+
+    @base.resource(resource.Snippet)
+    def snippet(self, snippet_id):
+        """
+        Get snippet
+        """
+        return resource.Snippet(self, snippet_id)
+
+    @base.resource(resource.Snippets)
+    def snippets(self):
+        """
+        Get snippets
+        """
+        return resource.Snippets(self)
+
+    @base.resource(resource.RepositoryBase)
+    def repository(self):
+        """
+        Get repository
+        """
+        return resource.RepositoryBase(self)
+
+    @base.resource(resource.ServicesBase)
+    def service(self, name):
+        """
+        Get service resource
+        """
+        return resource.ServicesBase(self, name)

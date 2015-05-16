@@ -395,3 +395,264 @@ class GitlabTestCase(unittest.TestCase):
             self.assertRaises(self.service.project(1).key(2).create(data))
         with port.assertRaises(MethodNotSupported):
             self.assertRaises(self.service.project(1).key(3).update(data))
+
+    def test_groups(self):
+        data = { 'test' : 'test'}
+
+        self.service.groups().get()
+        self.expect('GET', '/groups')
+
+        self.service.groups().search("test")
+        self.expect('GET', '/groups', { "search":"test"} )
+
+        self.service.groups().create(data)
+        self.expect('POST', '/groups', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.groups().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.groups().delete())
+
+        self.service.group(1).get()
+        self.expect('GET', '/groups/1')
+
+        self.service.group(1).delete()
+        self.expect('DELETE', '/groups/1')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).update(data))
+
+        # admin only
+        self.service.group(1).transfer_project(3)
+        self.expect('POST', '/groups/1/projects/3')
+
+        self.service.group(1).members().get()
+        self.expect('GET', '/groups/1/members')
+
+        self.service.group(1).members().create(data)
+        self.expect('POST', '/groups/1/members', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).members().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).members().delete())
+
+        self.service.group(1).member(3).update(data)
+        self.expect('PUT', '/groups/1/members/3', data)
+
+        self.service.group(1).member(3).delete()
+        self.expect('DELETE', '/groups/1/members/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).member(4).get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.group(1).member(3).create(data))
+
+    def test_labels(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).labels().get()
+        self.expect('GET', '/projects/1/labels')
+
+        self.service.project(2).labels().create(data)
+        self.expect('POST', '/projects/2/labels', data)
+
+        self.service.project(3).labels().update(data)
+        self.expect('PUT', '/projects/3/labels', data)
+
+        self.service.project(4).labels().delete()
+        self.expect('DELETE', '/projects/4/labels')
+
+    def test_milestones(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).milestones().get()
+        self.expect('GET', '/projects/1/milestones')
+
+        self.service.project(1).milestones().get(data)
+        self.expect('GET', '/projects/1/milestones', data)
+
+        self.service.project(2).milestones().create(data)
+        self.expect('POST', '/projects/2/milestones', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestones().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestones().delete())
+
+        self.service.project(1).milestone(4).get()
+        self.expect('GET', '/projects/1/milestones/4')
+
+        self.service.project(3).milestone(5).update(data)
+        self.expect('PUT', '/projects/3/milestones/5', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestone(5).create(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).milestone(5).delete())
+
+        self.service.project(3).milestone(5).issues()
+        self.expect('GET', '/projects/3/milestones/5/issues')
+
+    def test_notes(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).issue(4).notes().get()
+        self.expect('GET', '/projects/1/issues/4/notes')
+
+        self.service.project(1).issue(4).notes().create(data)
+        self.expect('POST', '/projects/1/issues/4/notes', data)
+
+        self.service.project(1).issue(4).note(3).update(data)
+        self.expect('PUT', '/projects/1/issues/4/notes/3', data)
+
+        self.service.project(1).issue(4).note(2).get()
+        self.expect('GET', '/projects/1/issues/4/notes/2')
+
+        self.service.project(1).snippet(4).notes().get()
+        self.expect('GET', '/projects/1/snippets/4/notes')
+
+        self.service.project(1).snippet(4).notes().create(data)
+        self.expect('POST', '/projects/1/snippets/4/notes', data)
+
+        self.service.project(1).snippet(4).note(2).get()
+        self.expect('GET', '/projects/1/snippets/4/notes/2')
+
+        self.service.project(1).snippet(4).note(3).update(data)
+        self.expect('PUT', '/projects/1/snippets/4/notes/3', data)
+
+    def test_snippets(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).snippets().get()
+        self.expect('GET', '/projects/1/snippets')
+
+        self.service.project(2).snippets().create(data)
+        self.expect('POST', '/projects/2/snippets', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippets().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippets().delete())
+
+        self.service.project(1).snippet(3).get()
+        self.expect('GET', '/projects/1/snippets/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).snippet(4).create(data))
+
+        self.service.project(3).snippet(3).update(data)
+        self.expect('PUT', '/projects/3/snippets/3', data)
+
+        self.service.project(3).snippet(3).delete()
+        self.expect('DELETE', '/projects/3/snippets/3')
+
+        self.service.project(3).snippet(3).raw()
+        self.expect('GET', '/projects/3/snippets/3/raw')
+
+    def test_repository(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).repository().tags()
+        self.expect('GET', '/projects/1/repository/tags')
+
+        self.service.project(1).repository().tag(data)
+        self.expect('POST', '/projects/1/repository/tags', data)
+
+        self.service.project(1).repository().tree()
+        self.expect('GET', '/projects/1/repository/tree')
+
+        self.service.project(2).repository().raw_file("shkslf", data)
+        self.expect('GET', '/projects/2/repository/blobs/shkslf', data)
+
+        self.service.project(2).repository().raw_blob("shkslf")
+        self.expect('GET', '/projects/2/repository/raw_blobs/shkslf')
+
+        self.service.project(2).repository().get_archive()
+        self.expect('GET', '/projects/2/repository/archive')
+
+        self.service.project(2).repository().compare(data)
+        self.expect('GET', '/projects/2/repository/compare', data)
+
+        self.service.project(2).repository().contributors()
+        self.expect('GET', '/projects/2/repository/contributors')
+
+    def test_repository_files(self):
+        data = { 'test' : 'test'}
+
+        self.service.project(1).repository().file().get(data)
+        self.expect('GET', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().create(data)
+        self.expect('POST', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().update(data)
+        self.expect('PUT', '/projects/1/repository/files', data)
+
+        self.service.project(1).repository().file().delete(data)
+        self.expect('DELETE', '/projects/1/repository/files', data)
+
+    def test_services(self):
+        data = { 'test' : 'test'}
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).service("name").get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).service("name").create(data))
+
+        self.service.project(1).service("gitlab-ci").update(data)
+        self.expect('PUT', '/projects/1/services/gitlab-ci', data)
+
+        self.service.project(1).service("hipchat").update(data)
+        self.expect('PUT', '/projects/1/services/hipchat', data)
+
+        self.service.project(1).service("gitlab-ci").delete()
+        self.expect('DELETE', '/projects/1/services/gitlab-ci')
+
+        self.service.project(1).service("hipchat").delete()
+        self.expect('DELETE', '/projects/1/services/hipchat')
+
+    def test_session(self):
+        data = { 'test' : 'test'}
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().delete())
+
+        self.service.session().create(data)
+        self.expect('POST', '/session', data)
+
+    def test_system_hook(self):
+        data = { 'test' : 'test'}
+
+        self.service.hooks().get()
+        self.expect('GET', '/hooks')
+
+        self.service.hooks().create(data)
+        self.expect('POST', '/hooks', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hooks().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hooks().delete())
+
+        # get is basically a test
+        self.service.hook(3).get()
+        self.expect('GET', '/hooks/3')
+        
+        self.service.hook(3).test()
+        self.expect('GET', '/hooks/3')
+
+        self.service.hook(3).delete()
+        self.expect('DELETE', '/hooks/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hook(3).update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hook(3).create(data))
+        

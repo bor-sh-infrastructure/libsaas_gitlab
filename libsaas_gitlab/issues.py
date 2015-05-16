@@ -2,7 +2,6 @@ from libsaas import http, parsers
 from libsaas.services import base
 
 from . import resource
-from . import notes
 
 class IssuesBase(resource.GitlabResource):
     path = 'issues'
@@ -11,19 +10,19 @@ class IssuesBase(resource.GitlabResource):
     def delete(self):
         raise base.MethodNotSupported()
 
-    @base.resource(notes.Note)
+    @base.resource(resource.Note)
     def note(self, note_id):
         """
         Return a resource corresponding to a single note.
         """
-        return notes.Note(self, note_id)            
+        return resource.Note(self, note_id)
 
-    @base.resource(notes.Notes)
+    @base.resource(resource.Notes)
     def notes(self):
         """
         Return a resource corresponding to all notes.
         """
-        return notes.Notes(self)
+        return resource.Notes(self)
 
 class Issues(IssuesBase):
 
