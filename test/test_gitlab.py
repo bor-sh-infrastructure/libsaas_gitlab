@@ -627,4 +627,32 @@ class GitlabTestCase(unittest.TestCase):
         self.service.session().create(data)
         self.expect('POST', '/session', data)
 
+    def test_system_hook(self):
+        data = { 'test' : 'test'}
+
+        self.service.hooks().get()
+        self.expect('GET', '/hooks')
+
+        self.service.hooks().create(data)
+        self.expect('POST', '/hooks', data)
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hooks().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hooks().delete())
+
+        # get is basically a test
+        self.service.hook(3).get()
+        self.expect('GET', '/hooks/3')
+        
+        self.service.hook(3).test()
+        self.expect('GET', '/hooks/3')
+
+        self.service.hook(3).delete()
+        self.expect('DELETE', '/hooks/3')
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hook(3).update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.hook(3).create(data))
         

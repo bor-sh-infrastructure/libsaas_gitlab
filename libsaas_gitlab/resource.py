@@ -27,7 +27,6 @@ class GitlabResource(base.RESTResource):
         Get all data
         """
         request = http.Request('GET', self.get_url(), data)
-
         return request, parsers.parse_json
 
 class NotesBase(base.RESTResource):
@@ -279,4 +278,34 @@ class Session(GitlabResource):
 
     @base.apimethod
     def delete(self):
+        raise base.MethodNotSupported()
+
+class HooksBase(base.RESTResource):
+    path = 'hooks'
+
+class Hooks(HooksBase):
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def delete(self):
+        raise base.MethodNotSupported()
+
+class Hook(HooksBase):
+
+    @base.apimethod
+    def test(self):
+        """
+        Test hook
+        """
+        return http.Request('GET', self.get_url()), parsers.parse_json
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def create(self, obj):
         raise base.MethodNotSupported()

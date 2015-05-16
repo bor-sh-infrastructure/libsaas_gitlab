@@ -112,4 +112,18 @@ class Gitlab(base.Resource):
         """
         return resource.Session(self)
 
+    @base.resource(resource.Hook)
+    def hook(self, hook_id):
+        """
+        Return the resource corresponding to a hook
+        """
+        return resource.Hook(self, hook_id)
+
+    @base.resource(resource.Hooks)
+    def hooks(self):
+        """
+        Return the resource corresponding to all hooks
+        """
+        return resource.Hooks(self)
+
 Gitlab = Gitlab
