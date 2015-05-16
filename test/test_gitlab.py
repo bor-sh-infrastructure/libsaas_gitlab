@@ -613,4 +613,18 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(1).service("hipchat").delete()
         self.expect('DELETE', '/projects/1/services/hipchat')
+
+    def test_session(self):
+        data = { 'test' : 'test'}
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().update(data))
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.session().delete())
+
+        self.service.session().create(data)
+        self.expect('POST', '/session', data)
+
         

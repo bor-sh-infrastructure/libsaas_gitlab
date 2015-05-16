@@ -4,6 +4,7 @@ from libsaas import http
 from libsaas.filters import auth
 from libsaas.services import base
 
+from . import resource
 from . import projects
 from . import users
 from . import issues
@@ -103,5 +104,12 @@ class Gitlab(base.Resource):
         Return the resource corresponding to all the groups.
         """
         return groups.Groups(self)
+
+    @base.resource(resource.Session)
+    def session(self):
+        """
+        Return the resource corresponding to a session
+        """
+        return resource.Session(self)
 
 Gitlab = Gitlab

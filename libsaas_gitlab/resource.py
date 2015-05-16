@@ -265,3 +265,18 @@ class RepositoryBase(base.RESTResource):
         Get files resource
         """
         return FilesBase(self)
+
+class Session(GitlabResource):
+    path = 'session'
+
+    @base.apimethod
+    def get(self):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def update(self, obj):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def delete(self):
+        raise base.MethodNotSupported()
