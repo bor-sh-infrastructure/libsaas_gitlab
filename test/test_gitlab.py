@@ -593,4 +593,24 @@ class GitlabTestCase(unittest.TestCase):
 
         self.service.project(1).repository().file().delete(data)
         self.expect('DELETE', '/projects/1/repository/files', data)
+
+    def test_services(self):
+        data = { 'test' : 'test'}
+
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).service("name").get())
+        with port.assertRaises(MethodNotSupported):
+            self.assertRaises(self.service.project(4).service("name").create(data))
+
+        self.service.project(1).service("gitlab-ci").update(data)
+        self.expect('PUT', '/projects/1/services/gitlab-ci', data)
+
+        self.service.project(1).service("hipchat").update(data)
+        self.expect('PUT', '/projects/1/services/hipchat', data)
+
+        self.service.project(1).service("gitlab-ci").delete()
+        self.expect('DELETE', '/projects/1/services/gitlab-ci')
+
+        self.service.project(1).service("hipchat").delete()
+        self.expect('DELETE', '/projects/1/services/hipchat')
         

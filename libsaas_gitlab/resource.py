@@ -173,6 +173,17 @@ class FilesBase(GitlabResource):
         url = '{0}'.format(self.get_url())
         return http.Request('DELETE', url, data), parsers.parse_json
 
+class ServicesBase(GitlabResource):
+    path = 'services'
+
+    @base.apimethod
+    def get(self):
+        raise base.MethodNotSupported()
+
+    @base.apimethod
+    def create(self, obj):
+        raise base.MethodNotSupported()
+
 class RepositoryBase(base.RESTResource):
     path = 'repository'
 

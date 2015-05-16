@@ -227,3 +227,10 @@ class Project(ProjectsBase):
         Get repository
         """
         return resource.RepositoryBase(self)
+
+    @base.resource(resource.ServicesBase)
+    def service(self, name):
+        """
+        Get service resource
+        """
+        return resource.ServicesBase(self, name)
